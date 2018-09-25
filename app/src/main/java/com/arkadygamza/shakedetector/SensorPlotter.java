@@ -19,7 +19,7 @@ import rx.Subscription;
  */
 public class SensorPlotter {
     public static final int MAX_DATA_POINTS = 50;
-    private int VIEWPORT_SECONDS = 1;
+    private int VIEWPORT_SECONDS;
     public static final int FPS = 10;
 
     @NonNull
@@ -43,6 +43,46 @@ public class SensorPlotter {
                          @NonNull Observable<SensorEvent> sensorEventObservable,String state,Map<String,Double> incValue) {
         this.incValue = incValue;
         this.state = state;
+        mName = name;
+        mSensorEventObservable = sensorEventObservable;
+
+        graphView.getViewport().setXAxisBoundsManual(true);
+        graphView.getViewport().setMinX(0);
+        graphView.getViewport().setMaxX(VIEWPORT_SECONDS * 1000); // number of ms in viewport
+
+        graphView.getViewport().setYAxisBoundsManual(true);
+        graphView.getViewport().setMinY(-20);
+        graphView.getViewport().setMaxY(20);
+
+        graphView.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+        graphView.getGridLabelRenderer().setVerticalLabelsVisible(false);
+
+        mSeriesXs = new LineGraphSeries<>();
+        mSeriesXf = new LineGraphSeries<>();
+        mSeriesYs = new LineGraphSeries<>();
+        mSeriesYf = new LineGraphSeries<>();
+        mSeriesZs = new LineGraphSeries<>();
+        mSeriesZf = new LineGraphSeries<>();
+
+        mSeriesXs.setColor(Color.RED);
+        mSeriesXf.setColor(Color.YELLOW);
+        mSeriesYs.setColor(Color.GREEN);
+        mSeriesYf.setColor(Color.GRAY);
+        mSeriesZs.setColor(Color.BLUE);
+        mSeriesZf.setColor(Color.CYAN);
+
+        graphView.addSeries(mSeriesXs);
+        graphView.addSeries(mSeriesXf);
+        graphView.addSeries(mSeriesYs);
+        graphView.addSeries(mSeriesYf);
+        graphView.addSeries(mSeriesZs);
+        graphView.addSeries(mSeriesZf);
+    }
+    public SensorPlotter(@NonNull String name, @NonNull  GraphView graphView,
+                         @NonNull Observable<SensorEvent> sensorEventObservable,String state,Map<String,Double> incValue, int v) {
+        this.incValue = incValue;
+        this.state = state;
+        this.VIEWPORT_SECONDS=v; System.out.println(VIEWPORT_SECONDS + "!!!!!!!!");
         mName = name;
         mSensorEventObservable = sensorEventObservable;
 
@@ -142,5 +182,10 @@ public class SensorPlotter {
 
     public void changeViewPort(int v) {
         this.VIEWPORT_SECONDS = v;
+        System.out.println(VIEWPORT_SECONDS);
+    }
+
+    public void getViewPort(int v) {
+
     }
 }

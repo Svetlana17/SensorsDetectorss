@@ -23,13 +23,19 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp">
 
+        <EditText
+            android:id="@+id/value_shag"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:inputType="numberDecimal" />
 
-        <SeekBar
-            android:id="@+id/seekBar"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/shag"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:progress="5"
-            android:max="20" />
+            android:layout_marginLeft="50dp"
+            android:onClick="onClick" />
 
     </RelativeLayout>
     <RelativeLayout
