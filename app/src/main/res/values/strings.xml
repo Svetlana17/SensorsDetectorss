@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ShakeDetector</string>
+    <string name="Shag">Укажите шаг дискретизации</string>
 </resources>

@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null || !savedInstanceState.containsKey("VIEWPORT_SECONDS")) {VIEWPORT_SECONDS=10;
         } else {
-            VIEWPORT_SECONDS = (int) savedInstanceState.getSerializable("VIEWPORT_SECONDS");
+           VIEWPORT_SECONDS = (int) savedInstanceState.getSerializable("VIEWPORT_SECONDS");
+
         }
 
         increaseValue = new HashMap<>();
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                int i= Integer.parseInt(shagValue.getText().toString());
                 sensorPlotter.changeViewPort(i);
                 VIEWPORT_SECONDS=i;
-                restartActivity(MainActivity.this,i);
+                restartActivity(MainActivity.this);
             }
         });
 
@@ -219,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setupPlotters() {
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        List<Sensor> linearAccSensors = sensorManager.getSensorList(Sensor.TYPE_LINEAR_ACCELERATION);
+        List<Sensor> linearAccSensors = sensorManager.getSensorList(Sensor.TYPE_ACCELEROMETER);
         sensorPlotter=(new SensorPlotter("LIN", (GraphView) findViewById(R.id.graph_accelerometr), SensorEventObservableFactory.createSensorEventObservable(linearAccSensors.get(0), sensorManager), state, increaseValue, VIEWPORT_SECONDS));
         mPlotters.add(sensorPlotter);
     }
@@ -262,7 +263,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-    public static void restartActivity(Activity activity, int i) {
+    public static void restartActivity(Activity activity) {
 
         if (Build.VERSION.SDK_INT >= 11) {
             activity.recreate();
