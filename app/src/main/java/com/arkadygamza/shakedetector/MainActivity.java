@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
@@ -30,7 +32,8 @@ import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func2;
-///рабочий
+// не выложен на githab
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final List<SensorPlotter> mPlotters = new ArrayList<>(3);
@@ -44,7 +47,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button button;
     SensorPlotter sensorPlotter;
     private int VIEWPORT_SECONDS;
-
+    TextView linX;
+    TextView linY;
+    TextView linZ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +127,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button btnZ = (Button) findViewById(R.id.btn_z);
         Button btnAll = (Button) findViewById(R.id.btn_all);
         Button btnCancel = (Button) findViewById(R.id.btn_cancel);
-
+        linX = (TextView) findViewById(R.id.coordinats_acceler_x);
+        linY = (TextView) findViewById(R.id.coordinats_acceler_y);
+        linZ = (TextView) findViewById(R.id.coordinats_acceler_z);
         btnX.setOnClickListener(this);
         btnY.setOnClickListener(this);
         btnZ.setOnClickListener(this);
@@ -266,4 +273,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             activity.startActivity(activity.getIntent());
         }
     }
+
 }
