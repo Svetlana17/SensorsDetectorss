@@ -30,7 +30,7 @@ import rx.Observable;
 import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func2;
-
+///рабочий
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final List<SensorPlotter> mPlotters = new ArrayList<>(3);
@@ -78,12 +78,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 restartActivity(MainActivity.this);
             }
         });
-
-
-
-
-
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

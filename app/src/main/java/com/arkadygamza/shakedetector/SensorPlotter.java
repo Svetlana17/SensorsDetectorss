@@ -47,7 +47,7 @@ public class SensorPlotter {
         mSensorEventObservable = sensorEventObservable;
 
         graphView.getViewport().setXAxisBoundsManual(true);
-        graphView.getViewport().setMinX(0);
+        graphView.getViewport().setMinX(-20);// ТУТ ПОМЕНЯЛА
         graphView.getViewport().setMaxX(VIEWPORT_SECONDS * 1000); // number of ms in viewport
 
         graphView.getViewport().setYAxisBoundsManual(true);

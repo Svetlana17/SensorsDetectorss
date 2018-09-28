@@ -1,9 +1,11 @@
 package com.arkadygamza.shakedetector;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -29,6 +31,8 @@ import rx.Subscription;
 import rx.functions.Action1;
 import rx.functions.Func2;
 
+import static com.arkadygamza.shakedetector.MainActivity.restartActivity;
+
 public class GyroscopeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final List<SensorPlotter> mPlotters = new ArrayList<>(3);
@@ -39,10 +43,22 @@ public class GyroscopeActivity extends AppCompatActivity implements View.OnClick
     public Map<String, Double> increaseValue;
     EditText editValue;
 
+EditText shagValue;
+ Button button;
+ SensorPlotter sensorPlotter;
+ private int VIEWPORT_SECONDS;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gyroscope);
+       if (savedInstanceState == null || !savedInstanceState.containsKey("VIEWPORT_SECONDS")) {VIEWPORT_SECONDS=10;
+        } else {
+            VIEWPORT_SECONDS = (int) savedInstanceState.getSerializable("VIEWPORT_SECONDS");
+
+        }
+
         increaseValue = new HashMap<>();
         increaseValue.put("X", 0.0);
         increaseValue.put("Y", 0.0);
@@ -52,26 +68,20 @@ public class GyroscopeActivity extends AppCompatActivity implements View.OnClick
         ArrayAdapter<?> adapter =
                 ArrayAdapter.createFromResource(this, R.array.list, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
-        SeekBar seekBar = (SeekBar) findViewById(R.id.seekBar_gyroscope);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        shagValue= (EditText) findViewById(R.id.value_shag);
+        button=(Button) findViewById(R.id.shag);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                mPlotters.get(0).changeViewPort(i);
-            }
+            public void onClick(View view) {
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
+               int i= Integer.parseInt(shagValue.getText().toString());
+                sensorPlotter.changeViewPort(i);
+                VIEWPORT_SECONDS=i;
+                restartActivity(GyroscopeActivity.this);
             }
         });
-
-        spinner.setAdapter(adapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -154,6 +164,16 @@ public class GyroscopeActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if(VIEWPORT_SECONDS>0){
+            outState.putSerializable("VIEWPORT_SECONDS", VIEWPORT_SECONDS);
+        }
+    }
+
+
+
     public void updateIncValue(String line, String value) {
         increaseValue.put(line, Double.valueOf(value));
         changeIncValue(increaseValue);
@@ -196,8 +216,13 @@ public class GyroscopeActivity extends AppCompatActivity implements View.OnClick
 
     private void setupPlotters() {
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        List<Sensor> linearAccSensors = sensorManager.getSensorList(Sensor.TYPE_GYROSCOPE);
-        mPlotters.add(new SensorPlotter("GYR", (GraphView) findViewById(R.id.graph_gyroscope), SensorEventObservableFactory.createSensorEventObservable(linearAccSensors.get(0), sensorManager), state, increaseValue));
+        List<Sensor> linearAccSensors = sensorManager.getSensorList(Sensor.TYPE_GYROSCOPE);///////>????????
+      //  mPlotters.add(new SensorPlotter("GYR", (GraphView) findViewById(R.id.graph_gyroscope), SensorEventObservableFactory.createSensorEventObservable(linearAccSensors.get(0), sensorManager), state, increaseValue));
+  /*?????????????????????????*/
+        sensorPlotter=(new SensorPlotter("LIN", (GraphView) findViewById(R.id.graph_gyroscope), SensorEventObservableFactory.createSensorEventObservable(linearAccSensors.get(0), sensorManager), state, increaseValue, VIEWPORT_SECONDS));
+        mPlotters.add(sensorPlotter);
+
+
     }
 
     @Override
@@ -238,4 +263,15 @@ public class GyroscopeActivity extends AppCompatActivity implements View.OnClick
                 break;
         }
     }
+
+     public static void restartActivity(Activity activity) {
+
+        if (Build.VERSION.SDK_INT >= 11) {
+            activity.recreate();
+        } else {
+            activity.finish();
+            activity.startActivity(activity.getIntent());
+        }
+    }
+
 }
